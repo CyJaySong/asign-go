@@ -2,6 +2,7 @@ package asign
 
 import (
 	"context"
+
 	"github.com/cyjaysong/asign-go/model"
 )
 
@@ -19,9 +20,22 @@ func (the Client) AddPersonalUserV2(ctx context.Context, req *model.AddPersonalU
 func (the Client) AddEnterpriseUserV2(ctx context.Context, req *model.AddEnterpriseUserV2ReqBody) (res *model.BaseRes[model.AddEnterpriseUserV2ResBody], err error) {
 	path := "/v2/user/addEnterpriseUser"
 	if req.CompanyName == "*" {
-		req.CompanyName = req.CreditCode
+		req.CompanyName = ""
 	}
 	res = new(model.BaseRes[model.AddEnterpriseUserV2ResBody])
+	if err = the.post(ctx, path, req, res); err != nil {
+		return nil, err
+	}
+	return
+}
+
+// 添加陌生用户（V2）
+func (the Client) AddStrangerV2(ctx context.Context, req *model.AddStrangerV2ReqBody) (res *model.BaseRes[model.AddStrangerV2ResBody], err error) {
+	path := "/v2/user/addStranger"
+	if req.CompanyName == "*" {
+		req.CompanyName = ""
+	}
+	res = new(model.BaseRes[model.AddStrangerV2ResBody])
 	if err = the.post(ctx, path, req, res); err != nil {
 		return nil, err
 	}

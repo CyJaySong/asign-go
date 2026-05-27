@@ -42,6 +42,29 @@ type AddEnterpriseUserV2ResBody struct {
 	SealNo string `json:"sealNo" dc:"生成默认印章编号"`
 }
 
+// 添加陌生用户V2 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=addStrangerNew
+type AddStrangerV2ReqBody struct {
+	Account             string   `json:"account" dc:"用户唯一识别码（可用证件号、手机号等具有唯一属性的标识作为参数传递）"`
+	UserType            int      `json:"userType" dc:"用户类型：1：企业 2：个人"`
+	Name                string   `json:"name,omitempty" dc:"个人用户姓名/企业法人姓名"`
+	IdCard              string   `json:"idCard,omitempty" dc:"预填 身份证号"`
+	IdCardType          int      `json:"idCardType,omitempty" dc:"证件类型，不传默认为1；1：居民身份证；2：台湾居民来往大陆通行证；3：港澳居民来往内地通行证等...；更多类型见详细说明；【注】当选择非居民身份证类型时，爱签平台无法提供实名认证服务。该用户的实名认证由调用方，在同步用户之前自行完成。"`
+	BankCard            string   `json:"bankCard,omitempty" dc:"预填 银行卡号"`
+	CompanyName         string   `json:"companyName,omitempty" dc:"企业名称"`
+	CreditCode          string   `json:"creditCode,omitempty" dc:"预填 统一社会信用代码证号"`
+	AgentName           string   `json:"agentName,omitempty" dc:"预填 代理人名称"`
+	AgentCardNo         string   `json:"agentCardNo,omitempty" dc:"预填 代理人身份证"`
+	Mobile              string   `json:"mobile,omitempty" dc:"签约手机，该手机号将用于企业用户合同签署时短信验证，请确保真实有效；【注】此值若不传，签署意愿验证将无法使用短信验证码方式。"`
+	SignPwd             string   `json:"signPwd,omitempty" dc:"签约密码明文，如果为空我方将随机生成签约密码（当签约方式为'签约密码签约'时会使用到，可通过重置接口修改）"`
+	IsSignPwdNotice     int      `json:"isSignPwdNotice,omitempty" dc:"是否将签约密码以短信形式通知用户：0 - 不通知（默认），1 - 通知"`
+	IsNotice            int      `json:"isNotice,omitempty" dc:"用户发起合同或需要签署时是否进行短信通知：0 - 否（默认），1 - 是"`
+	IdentifiedNotifyUrl string   `json:"identifiedNotifyUrl,omitempty" dc:"陌生人认证成功异步通知地址"`
+	ImmutableInfoList   []string `json:"immutableInfoList,omitempty" dc:"指定页面不可修改预填信息参数"`
+}
+
+// 添加陌生用户V2 Res
+type AddStrangerV2ResBody bool
+
 // 查询用户信息 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=getUser
 type GetUserReqBody struct {
 	Account    string `json:"account,omitempty" dc:"用户唯一识别码"`
