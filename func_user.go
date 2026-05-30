@@ -125,6 +125,16 @@ func (the Client) ModifyUserName(ctx context.Context, req *model.ModifyUserNameR
 	return
 }
 
+// 修改陌生用户
+func (the Client) ModifyStranger(ctx context.Context, req *model.ModifyStrangerReqBody) (res *model.BaseRes[model.ModifyStrangerResBody], err error) {
+	path := "/v2/user/modifyStranger"
+	res = new(model.BaseRes[model.ModifyStrangerResBody])
+	if err = the.post(ctx, path, req, res); err != nil {
+		return nil, err
+	}
+	return
+}
+
 // 用户重新认证
 func (the Client) UserReauth(ctx context.Context, req *model.UserReauthReqBody) (res *model.BaseRes[model.UserReauthResBody], err error) {
 	path := "/v2/user/reAuthUser"

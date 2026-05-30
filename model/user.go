@@ -108,7 +108,7 @@ type GetCompUserResBodyItem struct {
 	CompanyName  string `json:"companyName,omitempty" dc:"企业名称"`
 	IdCard       string `json:"idCard" dc:"个人用户证件号/企业法人身份证号"`
 	UserType     int    `json:"userType" dc:"用户类型：1：企业；2：个人"`
-	Status       int    `json:"status" dc:"用户状态：0：未激活; 1：有效; 2：锁定"`
+	Status       int    `json:"status" dc:"用户状态：0：未认证 1：已认证"`
 	CreditCode   string `json:"creditCode,omitempty" dc:"社会统一信用代码"`
 	BankCard     string `json:"bankCard,omitempty" dc:"用户银行卡号"`
 	PortVersion  int    `json:"portVersion,omitempty" dc:"用户添加时调用的接口版本：0：历史接口；1：V2版本接口"`
@@ -183,6 +183,23 @@ type ModifyUserNameReqBody struct {
 
 // 修改个人信息 Res
 type ModifyUserNameResBody string
+
+// 修改陌生用户 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=modifyStranger
+type ModifyStrangerReqBody struct {
+	Account     string `json:"account" dc:"用户唯一识别码（可用证件号、手机号等具有唯一属性的标识作为参数传递）"`
+	UserType    int    `json:"userType" dc:"用户类型：1：企业 2：个人"`
+	Name        string `json:"name,omitempty" dc:"个人用户姓名/企业法人姓名"`
+	IdCard      string `json:"idCard,omitempty" dc:"预填 身份证号"`
+	Mobile      string `json:"mobile,omitempty" dc:"手机号"`
+	BankCard    string `json:"bankCard,omitempty" dc:"预填 银行卡号"`
+	CompanyName string `json:"companyName,omitempty" dc:"企业名称"`
+	CreditCode  string `json:"creditCode,omitempty" dc:"预填 统一社会信用代码证号"`
+	AgentName   string `json:"agentName,omitempty" dc:"预填 代理人名称"`
+	AgentCardNo string `json:"agentCardNo,omitempty" dc:"预填 代理人身份证"`
+}
+
+// 修改个人信息 Res
+type ModifyStrangerResBody string
 
 // 用户重新认证 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=reAuthUser
 type UserReauthReqBody struct {
