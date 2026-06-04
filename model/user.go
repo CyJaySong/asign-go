@@ -107,6 +107,7 @@ type GetCompUserResBodyItem struct {
 	Name         string `json:"name" dc:"个人用户姓名/企业法人姓名"`
 	CompanyName  string `json:"companyName,omitempty" dc:"企业名称"`
 	IdCard       string `json:"idCard" dc:"个人用户证件号/企业法人身份证号"`
+	Mobile       string `json:"mobile" dc:"个人用户证件号/企业法人身份证号"`
 	UserType     int    `json:"userType" dc:"用户类型：1：企业；2：个人"`
 	Status       int    `json:"status" dc:"用户状态：0：未认证 1：已认证"`
 	CreditCode   string `json:"creditCode,omitempty" dc:"社会统一信用代码"`
