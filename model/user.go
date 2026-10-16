@@ -3,7 +3,7 @@ package model
 // 添加个人用户V2 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=addPersonalUserNew
 type AddPersonalUserV2ReqBody struct {
 	Account         string `json:"account" dc:"用户唯一识别码（可用证件号、手机号等具有唯一属性的标识作为参数传递）"`
-	SerialNo        string `json:"serialNo,omitempty" dc:"实名认证流水号（若实名认证服务由爱签平台提供，此值必传）"`
+	SerialNo        string `json:"serialNo" dc:"实名认证流水号（若实名认证服务由爱签平台提供，此值必传）"`
 	Name            string `json:"name,omitempty" dc:"用户姓名"`
 	IdCard          string `json:"idCard,omitempty" dc:"个人身份证、台胞证、港澳通行证等证件号；【注】此值是否需要传参，详见【特别说明】"`
 	IdCardType      int    `json:"idCardType,omitempty" dc:"证件类型，不传默认为1；1：居民身份证；2：台湾居民来往大陆通行证；3：港澳居民来往内地通行证等...；更多类型见详细说明；【注】当选择非居民身份证类型时，爱签平台无法提供实名认证服务。该用户的实名认证由调用方，在同步用户之前自行完成。"`
@@ -90,6 +90,10 @@ type GetUserResBody struct {
 	IdentifyTime string `json:"identifyTime,omitempty" dc:"认证时间"`
 	Status       int    `json:"status" dc:"用户状态：0：未激活; 1：有效; 2：锁定"`
 	SerialNo     string `json:"serialNo,omitempty" dc:"实名认证流水号"`
+	CertExpire   bool   `json:"certExpire,omitempty" dc:"证书是否过期"`
+	SerialNumber string `json:"serialNumber,omitempty" dc:"证书序列号"`
+	BeforeDate   string `json:"beforeDate,omitempty" dc:"证书有效开始日期"`
+	AfterDate    string `json:"afterDate,omitempty" dc:"证书有效截至日期"`
 }
 
 // 查询企业信息 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=getCompUser
@@ -219,4 +223,4 @@ type UserDeleteReqBody struct {
 }
 
 // 用户删除 Res
-type UserDeleteResBody string
+type UserDeleteResBody any

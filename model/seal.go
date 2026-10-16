@@ -3,7 +3,7 @@ package model
 // 查询印章 Req https://web.asign.cn/platform/openDoc/docDetail?mid=getUserSeals
 type GetUserSealsReqBody struct {
 	Account string `json:"account" dc:"用户唯一识别码"`
-	SealNo  string `json:"sealNo" dc:"印章编号（不传则返回印章列表）"`
+	SealNo  string `json:"sealNo,omitempty" dc:"印章编号（不传则返回印章列表）"`
 }
 
 // 查询印章 Res
@@ -24,12 +24,12 @@ type GetUserSealsItem struct {
 	SealNo    string `json:"sealNo" dc:"印章编号"`
 }
 
-// 印章授权（无校验） Req https: //web.asign.cn/platform/openDoc/docDetail?mid=nocheckAuth
+// 印章授权（无校验） Req https://web.asign.cn/platform/openDoc/docDetail?mid=nocheckAuth
 type NocheckAuthReqBody struct {
 	AuthAccount string `json:"authAccount" dc:"真实姓名"`
 	SealNo      string `json:"sealNo" dc:"授权印章编号（仅企业印章可授权）"`
 	Expired     string `json:"expired,omitempty" dc:"到期时间，不传默认为9999年23点59分59秒，指定格式：yyyy-MM-dd"`
-	IsDefault   int    `json:"isDefault" dc:"是否默认授权用户：（若为默认后续签约若使用此印章则默认当该授权用户签约）,1：是,0：否（默认）"`
+	IsDefault   int    `json:"isDefault,omitempty" dc:"是否默认授权用户：（若为默认后续签约若使用此印章则默认当该授权用户签约）,1：是,0：否（默认）"`
 }
 
 // 印章授权（无校验） Res

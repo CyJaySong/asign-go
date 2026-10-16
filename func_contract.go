@@ -2,6 +2,7 @@ package asign
 
 import (
 	"context"
+
 	"github.com/cyjaysong/asign-go/model"
 )
 
@@ -29,6 +30,16 @@ func (the Client) ContractAddSigner(ctx context.Context, req *model.ContractAddS
 func (the Client) WithdrawContract(ctx context.Context, req *model.WithdrawContractReqBody) (res *model.BaseRes[model.WithdrawContractResBody], err error) {
 	path := "/contract/withdraw"
 	res = new(model.BaseRes[model.WithdrawContractResBody])
+	if err = the.post(ctx, path, req, res); err != nil {
+		return nil, err
+	}
+	return
+}
+
+// 合同作废
+func (the Client) CancellationContract(ctx context.Context, req *model.CancellationContractReqBody) (res *model.BaseRes[model.CancellationContractResBody], err error) {
+	path := "/contract/cancellation"
+	res = new(model.BaseRes[model.CancellationContractResBody])
 	if err = the.post(ctx, path, req, res); err != nil {
 		return nil, err
 	}

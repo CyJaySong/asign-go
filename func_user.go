@@ -147,7 +147,7 @@ func (the Client) UserReauth(ctx context.Context, req *model.UserReauthReqBody) 
 
 // 用户删除
 func (the Client) UserDelete(ctx context.Context, req *model.UserDeleteReqBody) (res *model.BaseRes[model.UserDeleteResBody], err error) {
-	path := "/v2/user/remove"
+	path := "/user/remove"
 	res = new(model.BaseRes[model.UserDeleteResBody])
 	if err = the.post(ctx, path, req, res); err != nil {
 		return nil, err

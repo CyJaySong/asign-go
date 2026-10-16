@@ -20,14 +20,18 @@ type ContractCreateReqBody struct {
 	RefuseOn             int                       `json:"refuseOn,omitempty" dc:"合同签署页退回按钮开关:1:开启,0:关闭(默认)"`
 	AutoContinue         int                       `json:"autoContinue,omitempty" dc:"当前签署人签署完成自动跳转至下一签署人签署开关,1:开启,0:关闭(默认)"`
 	ViewFlg              int                       `json:"viewFlg,omitempty" dc:"合同签署完是否允许可以通过链接查看合同内容,1:不允许查看,不传值:可以查看(默认)"`
+	IsVerify             int                       `json:"isVerify,omitempty" dc:"签署链接是否需要核验身份后查看合同内容:1:需要核验身份; 不传值:可以任意查看(默认)"`
 	RedirectReturnUrl    string                    `json:"redirectReturnUrl,omitempty" dc:"合同发起页面返回按钮跳转url"`
 	RedirectCompletedUrl string                    `json:"redirectCompletedUrl,omitempty" dc:"合同发起页面完成后跳转url"`
-	StoreCloudSign       string                    `json:"storeCloudSign,omitempty" dc:"私有云项目标识(不传默认存储公有云)"`
+	CloudStoreSign       string                    `json:"cloudStoreSign,omitempty" dc:"私有云项目标识(不传默认存储公有云)"`
 	EnableDownloadButton int                       `json:"enableDownloadButton,omitempty" dc:"签署页面直接下载,1:是,0:否(默认)"`
+	PartyAName           string                    `json:"partyAName,omitempty" dc:"合同发起方用户名称"`
+	ViewExpire           int                       `json:"viewExpire,omitempty" dc:"合同签署时间到期后是否允许可以通过链接查看合同内容:1:不允许查看"`
 }
 
 type ContractCreateTemplate struct {
 	TemplateNo    string                       `json:"templateNo,omitempty" dc:"合同模板编号"`
+	AppId         string                       `json:"appId,omitempty" dc:"跨应用间共享合同模板时传参指定创建此模板的应用ID"`
 	FileName      string                       `json:"fileName,omitempty" dc:"文件名称(自定义模板文件的展示名称,传值不包含文件后缀)"`
 	ContractNo    string                       `json:"contractNo,omitempty" dc:"合同编号(此处可传已完成签署的合同编号,实现追加签章的场景)"`
 	FillData      map[string]string            `json:"fillData,omitempty" dc:"单行文本、多行文本、日期、身份证类型参数填充"`
@@ -75,22 +79,28 @@ type CreateContractResFiles struct {
 type ContractAddSignerReqBody []*ContractAddSigner
 
 type ContractAddSigner struct {
-	ContractNo               string                  `json:"contractNo" dc:"合同唯一编码(40位之内)"`
-	Account                  string                  `json:"account" dc:"用户唯一识别码"`
-	SignType                 int                     `json:"signType,omitempty" dc:"签约方式:2:无感知签约(需要开通权限)3:有感知签约"`
-	SealNo                   string                  `json:"sealNo,omitempty" dc:"印章编号,若不传值,则由当前主体的默认印章进行签署"`
-	AuthSignAccount          string                  `json:"authSignAccount,omitempty" dc:"指定授权签约用户"`
-	NoticeMobile             string                  `json:"noticeMobile,omitempty" dc:"通知手机号"`
-	SignOrder                string                  `json:"signOrder,omitempty" dc:"使用顺序签约时签约顺序编号(从1开始),无序签约都为1"`
-	IsNotice                 int                     `json:"isNotice,omitempty" dc:"是否接收合同签署链接的短信通知"`
-	ValidateType             int                     `json:"validateType,omitempty" dc:"签署方式指定"`
-	FaceAuthMode             int                     `json:"faceAuthMode,omitempty" dc:"人脸识别方式"`
-	ValidateTypeList         string                  `json:"validateTypeList,omitempty" dc:"组合签署方式指定"`
-	AutoSwitch               int                     `json:"autoSwitch,omitempty" dc:"自动切换签约方式"`
-	IsNoticeComplete         int                     `json:"isNoticeComplete,omitempty" dc:"合同签署完成后是否通知用户,1:是,0:否(默认)"`
-	WaterMark                int                     `json:"waterMark,omitempty" dc:"是否在距底部10px中央位置添加日期水印,1:是,0:否(默认)"`
-	AutoSms                  int                     `json:"autoSms,omitempty" dc:"是否自动触发验证码短信,仅短信验证码方式签署时生效"`
-	CustomSignFlag           int                     `json:"customSignFlag,omitempty" dc:"签章位置策略"`
+	ContractNo       string                       `json:"contractNo" dc:"合同唯一编码(40位之内)"`
+	Account          string                       `json:"account" dc:"用户唯一识别码"`
+	SignType         int                          `json:"signType,omitempty" dc:"签约方式:2:无感知签约(需要开通权限)3:有感知签约"`
+	Pin              string                       `json:"pin,omitempty" dc:"PIN码:'signType=4'时必填。PIN码需使用SM3算法计算摘要传入"`
+	SealNo           string                       `json:"sealNo,omitempty" dc:"印章编号,若不传值,则由当前主体的默认印章进行签署"`
+	AuthSignAccount  string                       `json:"authSignAccount,omitempty" dc:"指定授权签约用户"`
+	NoticeMobile     string                       `json:"noticeMobile,omitempty" dc:"通知手机号"`
+	SignOrder        string                       `json:"signOrder,omitempty" dc:"使用顺序签约时签约顺序编号(从1开始),无序签约都为1"`
+	IsNotice         int                          `json:"isNotice,omitempty" dc:"是否接收合同签署链接的短信通知"`
+	ValidateType     int                          `json:"validateType,omitempty" dc:"签署方式指定"`
+	FaceAuthMode     int                          `json:"faceAuthMode,omitempty" dc:"人脸识别方式"`
+	WillConfig       *ContractAddSignerWillConfig `json:"willConfig,omitempty" dc:"视频双录签约设置"`
+	ValidateTypeList string                       `json:"validateTypeList,omitempty" dc:"组合签署方式指定"`
+	AutoSwitch       int                          `json:"autoSwitch,omitempty" dc:"自动切换签约方式"`
+	IsNoticeComplete int                          `json:"isNoticeComplete,omitempty" dc:"合同签署完成后是否通知用户,1:是,0:否(默认)"`
+	WaterMark        int                          `json:"waterMark,omitempty" dc:"是否在距底部10px中央位置添加日期水印,1:是,0:否(默认)"`
+	AutoSms          int                          `json:"autoSms,omitempty" dc:"是否自动触发验证码短信,仅短信验证码方式签署时生效"`
+	CustomSignFlag   int                          `json:"customSignFlag,omitempty" dc:"签章位置策略"`
+	SealSetting      int                          `json:"sealSetting,omitempty" dc:"印章设置（此参数仅针对签章策略中签章位置可移动时生效）"`
+	// 印章设置（此参数仅针对签章策略中签章位置可移动时生效）
+	// 1：显示（传此值时即可在拖动印章位置时选择签署页设置，用户可选项：所有页、奇数页、偶数页、当前页）
+	// 不传值或传其他值：不显示(默认)
 	SignStrategyList         []*SignStrategy         `json:"signStrategyList,omitempty" dc:"签章位置策略"`
 	SignStrikeList           []*SignStrike           `json:"signStrikeList,omitempty" dc:"骑缝章策略"`
 	ReceiverFillStrategyList []*ReceiverFillStrategy `json:"receiverFillStrategyList,omitempty" dc:"接收方模板填充策略"`
@@ -99,6 +109,22 @@ type ContractAddSigner struct {
 	WillType                 string                  `json:"willType,omitempty" dc:"指定视频核身模式"`
 	SignMark                 string                  `json:"signMark,omitempty" dc:"业务系统传递的唯一标识(自定义业务编号)"`
 	ChangeSeal               int                     `json:"changeSeal,omitempty" dc:"企业更换印章,1:更换,0:不更换(默认)"`
+	FillCallBackUrl          string                  `json:"fillCallBackUrl,omitempty" dc:"填充回调通知地址"`
+	BizId                    string                  `json:"bizId,omitempty" dc:"填充回调开发者自定义业务编号"`
+	TriggerSignFlag          int                     `json:"triggerSignFlag,omitempty" dc:"触发无感知签章场景;0:不开启(默认); 1:开启"`
+}
+
+// 视频双录签约设置
+type ContractAddSignerWillConfig struct {
+	WillType int `json:"willType,omitempty" dc:"意愿核身类型;0:问答模式(默认); 1:播报模式"`
+	Speed    int `json:"speed,omitempty" dc:"文本播报速度"`
+	// 文本播报速度 0:0.8倍速; 1:1.0倍速(默认); 2:1.2倍速; 3:1.35倍速; 4:1.5倍速
+	Contents []ContractAddSignerWillConfigContent `json:"contents,omitempty" dc:"《问答模式》意愿核身支持多轮问询，最多不可超过5个"`
+}
+
+type ContractAddSignerWillConfigContent struct {
+	Question string `json:"question,omitempty" dc:"意愿核身过程中的播报文本，长度250以内"`
+	Answer   string `json:"answer,omitempty" dc:"用户回答文本，单个回答长度10以内"`
 }
 
 // 签章策略
@@ -114,6 +140,8 @@ type SignStrategy struct {
 	SignY        float64 `json:"signY,omitempty" dc:"签章位置与当前签约文件的上内边距与当前签约文件高度的比例(精确到小数点后2位)(定位方式为坐标签章时必传)"`
 	OffsetX      float64 `json:"offsetX,omitempty" dc:"坐标偏移量(像素PX)"`
 	OffsetY      float64 `json:"offsetY,omitempty" dc:"坐标偏移量(像素PX)"`
+	KeywordIndex int     `json:"keywordIndex,omitempty" dc:"支持指定签章位置"`
+	// 支持指定签章位置 1: 仅第一个关键字出现位置签章；-1: 仅最后一个关键字出现位置签章;【注】若不传值，所有匹配位置均签章（默认）"`
 }
 
 // 骑缝章策略
@@ -190,6 +218,24 @@ type WithdrawContractReqBody struct {
 }
 type WithdrawContractResBody struct{}
 
+// 合同撤销 Req https://web.asign.cn/platform/openDoc/docDetail?mid=cancellation
+type CancellationContractReqBody struct {
+	ContractNo   string `json:"contractNo" dc:"合同唯一编码"`
+	ValidityTime int    `json:"validityTime" dc:"作废签署剩余天数（系统当前时间+该天数=在此日期之前可以签署合同日期）"`
+	NotifyUrl    string `json:"notifyUrl" dc:"合同签署完成后（合同状态 status=2）回调通知地址"`
+	RedirectUrl  string `json:"redirectUrl" dc:"合同签署完成后同步回调地址"`
+	RefuseOn     int    `json:"refuseOn" dc:"合同签署页退回按钮开关，1:开启，0:关闭(默认)"`
+	ViewFlg      int    `json:"viewFlg" dc:"合同签署完是否允许可以通过链接查看合同内容，1:不允许查看，不传值：可以查看(默认)"`
+	Style        int    `json:"style" dc:"印章样式，1:“作废”印章(默认),2:“解约”印章"`
+}
+type CancellationContractResBody struct {
+	ContractNo       string          `json:"contractNo" dc:"合同唯一编码"`
+	CancelContractNo string          `json:"cancelContractNo" dc:"如果作废合同拒签、过期、则可以通过该合同编号查询作废合同信息"`
+	ContractName     string          `json:"contractName" dc:"合同名称"`
+	ValidityTime     string          `json:"validityTime" dc:"合同有效期"`
+	SignUser         []*SignUserItem `json:"signUser" dc:"合同用户信息"`
+}
+
 // 查询合同状态 Req https://preweb.asign.cn/platform/openDoc/docDetail?mid=status
 type GetContractStatusReqBody struct {
 	ContractNo string `json:"contractNo" dc:"合同唯一编码"`
@@ -213,6 +259,7 @@ type GetContractResBody struct {
 	PreviewUrl       string          `json:"previewUrl" dc:"合同预览链接"`
 	EmbeddedUrl      string          `json:"embeddedUrl" dc:"合同嵌入式拖章链接"`
 	Remark           string          `json:"remark" dc:"退回/拒签原因"`
+	CancelContractNo string          `json:"cancelContractNo" dc:"如果作废合同拒签、过期、则可以通过该合同编号查询作废合同信息"`
 	SignUsers        []*SignUserItem `json:"signUser" dc:"合同用户信息"`
 }
 
